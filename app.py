@@ -1,40 +1,26 @@
 import streamlit as st
 from langchain.prompts import  PromptTemplate
 from langchain.llms import  CTransformers
-from dotenv import load_dotenv
-import os
-from langchain_huggingface import HuggingFaceEndpoint
 
-# Load environment variables from the .env file
-load_dotenv()
-
-# Access the Hugging Face API token
-huggingface_api_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-
-# Check if the token is loaded correctly
-if huggingface_api_token is None:
-    raise ValueError("Hugging Face API token is not set. Please check your .env file.")
 
 ## Function to get response from LLAMA 2 Model
 def getResponse(input_text, language):
-
-    llm = HuggingFaceEndpoint(
-        repo_id="meta-llama/Llama-2-7b",
-        temperature=0.01,
-        huggingfacehub_api_token=huggingface_api_token
-    )
-
+    ### LLama2 model
+    llm=CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',
+                      model_type='llama',
+                      config={'max_new_tokens':256,
+                              'temperature':0.01})
 ### Prompt Template
 
     template="""
-    Write a code using { language } for {input_text}
+    Write a program using {language} for {input_text}
     """
-    prompt = PromptTemplate(input_variables=["lang", "text"],
+    prompt = PromptTemplate(input_variables=["language", "input_text"],
                             template=template
                             )
 
     ## Generate response
-    response = llm(prompt.format(lang=language , text= input_text))
+    response = llm(prompt.format(language=language , input_text= input_text))
     print(response)
     return response
 
