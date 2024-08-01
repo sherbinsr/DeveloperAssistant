@@ -4,3 +4,6 @@ ctransformers
 langchain
 python-box
 streamlit
+huggingface_hub
+langchain-community
+langchain-huggingface
