@@ -8,12 +8,13 @@ def getResponse(input_text, language):
     ### LLama2 model
     llm=CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',
                       model_type='llama',
-                      config={'max_new_tokens':256,
+                      config={
+                          'max_new_tokens':2000,
                               'temperature':0.01})
 ### Prompt Template
 
     template="""
-    Write a program using {language} for {input_text}
+      Write a program using {language} for {input_text}
     """
     prompt = PromptTemplate(input_variables=["language", "input_text"],
                             template=template
@@ -21,7 +22,6 @@ def getResponse(input_text, language):
 
     ## Generate response
     response = llm(prompt.format(language=language , input_text= input_text))
-    print(response)
     return response
 
 
@@ -42,6 +42,7 @@ col1 =st.columns([5,5])
 language=st.selectbox('Select Language',
                       ('Java',
                        'Python',
+                       'Dart',
                        'C++',
                        'C',
                        'Javascript',
