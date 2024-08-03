@@ -9,9 +9,9 @@ def getResponse(input_text, language):
     llm=CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',
                       model_type='llama',
                       config={
-                          'max_new_tokens':2000,
-                              'temperature':0.01})
-### Prompt Template
+                          'max_new_tokens':4096,
+                          'temperature':0.01})
+    ### Prompt Template
 
     template="""
       Write a program using {language} for {input_text}
