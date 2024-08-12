@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain.prompts import  PromptTemplate
 from langchain.llms import  CTransformers
-
+from langchain.memory import ConversationBufferMemory
 
 ## Function to get response from LLAMA 2 Model
 def getResponse(input_text, language):
@@ -9,19 +9,23 @@ def getResponse(input_text, language):
     llm=CTransformers(model='models/llama-2-7b-chat.ggmlv3.q8_0.bin',
                       model_type='llama',
                       config={
-                          'max_new_tokens':4096,
+                          'max_new_tokens':500,
                           'temperature':0.01})
     ### Prompt Template
 
     template="""
-      Write a program using {language} for {input_text}
+      Write the code using {language} for {input_text}
     """
     prompt = PromptTemplate(input_variables=["language", "input_text"],
                             template=template
                             )
-
+    ### Memory
+    memory = ConversationBufferMemory()
     ## Generate response
     response = llm(prompt.format(language=language , input_text= input_text))
+    memory.save_context(
+        {"input": input_text},
+        {"output": response})
     return response
 
 
